@@ -16,40 +16,51 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+
+const isValidPassword = (password) => {
+  return passwordRegex.test(password);
+};
+
 export default function SignUp() {
-  const [createEmail, setCreateEmail] = useState("");
-  const [errorCreateEmail, setErrorCreateEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorPassword, setErrorPassword] = useState("");
+  const [errorConfirmPassword, setErrorConfirmPassword] = useState("");
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-  const isValidEmail = (email) => {
-    return emailRegex.test(email);
-  };
-
-  const validateEmail = (email) => {
-    if (!email) {
-      return "Email reqiured";
-    } else if (!isValidEmail (email)) {
-      return "Хүчингүй имэйл хаяг байна";
+  const validatePassword = (password) => {
+    if (!password) {
+      return "Password required";
+    } else if (!isValidPassword(password)) {
+      return "Invalid password";
     } else {
       return "";
     }
   };
 
-  const handleCreateInputChange = (event) => {
+  const validateConfirmPassword = (password) => {
+    if (!password) {
+      return "  Confirm Password required";
+    } else if (isValidPassword !== confirmPassword) {
+      return "Those password didn't match.Try again.";
+    } else {
+      return "";
+    }
+  };
+  const handlePasswordInputChange = (event) => {
     const value = event.target.value;
-    setCreateEmail(value);
-    if (errorCreateEmail) {
-      if (isValidEmail(value)) {
-        setErrorCreateEmail("");
+    setPassword(value);
+    if (errorPassword) {
+      if (isValidPassword(value)) {
+        setErrorPassword("");
       }
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const error = validateEmail(createEmail);
-    setErrorCreateEmail(error);
+    const error = validatePassword(password);
+    setErrorPassword(error);
     if (error === "") {
       console.log("create success");
     }
@@ -58,16 +69,16 @@ export default function SignUp() {
   return (
     <div className="w-screen min-h-screen flex  gap-12   justify-center items-center ">
       <div className="flex flex-col ">
-        <Card className="w-[400px] relative flex flex-col mt-1 ">
+        <Card className="w-[416px] h-[288px] relative flex flex-col mt-1 ">
           <CardHeader className={"flex flex-col "}>
             <Link href="/" className="w-fit p-1 hover:bg-gray-100 rounded-md">
               <ChevronLeft className="w-5 h-5" />
             </Link>
             <CardTitle className={"font-semibold text-2xl text-gray-900"}>
-              Create your account
+              Create strong password
             </CardTitle>
             <CardDescription>
-              Sign up to explore your favorite dishes.
+              Create a strong password with letters, numbers.
             </CardDescription>
             <CardAction>
               {/* <Button variant="link">Sign Up</Button> */}
@@ -75,22 +86,34 @@ export default function SignUp() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit}>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
+              <div className="flex flex-col gap-4 ">
+                <div className="gap-4">
                   {/* <Label htmlFor="email">Email</Label> */}
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="your email address"
+                    id="password"
+                    type="password"
+                    className={"w-full h-[36px]"}
+                    placeholder="password"
                     // required
-                    value={createEmail}
-                    onChange={handleCreateInputChange}
+                    value={password}
+                    onChange={handlePasswordInputChange}
                   />
-                  {errorCreateEmail && (
+                  {errorPassword && (
                     <span className="text-red-500  text-xs">
-                      {errorCreateEmail}
+                      {errorPassword}
                     </span>
                   )}
+                </div>
+                <div className="gap-4">
+                  <Input
+                    id="ConfirmPassword"
+                    type="ConfirmPassword"
+                    className={"w-full h-[36px]"}
+                    placeholder="ConfirmPassword"
+                    // required
+                    value={confirmPassword}
+                    onChange={handlePasswordInputChange}
+                  />
                 </div>
               </div>
               <CardFooter className="flex-col gap-2">
