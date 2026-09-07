@@ -30,7 +30,7 @@ export default function StepOnePage () {
     if (!email) {
       return "Email reqiured";
     } else if (!isValidEmail(email)) {
-      return "Хүчингүй имэйл хаяг байна";
+      return "Invaild Email";
     } else {
       return "";
     }

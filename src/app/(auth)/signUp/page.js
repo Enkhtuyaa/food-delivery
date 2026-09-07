@@ -16,7 +16,8 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
 
 const isValidPassword = (password) => {
   return passwordRegex.test(password);
@@ -27,6 +28,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
   const [errorConfirmPassword, setErrorConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const validatePassword = (password) => {
     if (!password) {
@@ -38,15 +40,16 @@ export default function SignUp() {
     }
   };
 
-  const validateConfirmPassword = (password) => {
-    if (!password) {
+  const validateConfirmPassword = (pwd, confirmPwd) => {
+    if (!confirmPwd) {
       return "  Confirm Password required";
-    } else if (isValidPassword !== confirmPassword) {
+    } else if (pwd !== confirmPwd) {
       return "Those password didn't match.Try again.";
     } else {
       return "";
     }
   };
+
   const handlePasswordInputChange = (event) => {
     const value = event.target.value;
     setPassword(value);
@@ -55,13 +58,26 @@ export default function SignUp() {
         setErrorPassword("");
       }
     }
+    if (errorConfirmPassword && confirmPassword) {
+      setErrorConfirmPassword(validateConfirmPassword(value, confirmPassword));
+    }
+  };
+
+  const handleConfirmPasswordInputChange = (event) => {
+    const value = event.target.value;
+    setConfirmPassword(value);
+    if (errorConfirmPassword) {
+      setErrorConfirmPassword(validateConfirmPassword(password, value));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const error = validatePassword(password);
-    setErrorPassword(error);
-    if (error === "") {
+    const pwdError = validatePassword(password);
+    const confirmError = validateConfirmPassword(password, confirmPassword);
+    setErrorPassword(pwdError);
+    setErrorConfirmPassword(confirmError);
+    if (pwdError === "" && confirmError === "") {
       console.log("create success");
     }
   };
@@ -69,7 +85,7 @@ export default function SignUp() {
   return (
     <div className="w-screen min-h-screen flex  gap-12   justify-center items-center ">
       <div className="flex flex-col ">
-        <Card className="w-[416px] h-[288px] relative flex flex-col mt-1 ">
+        <Card className="w-[416px]  relative flex flex-col mt-1 ">
           <CardHeader className={"flex flex-col "}>
             <Link href="/" className="w-fit p-1 hover:bg-gray-100 rounded-md">
               <ChevronLeft className="w-5 h-5" />
@@ -91,7 +107,7 @@ export default function SignUp() {
                   {/* <Label htmlFor="email">Email</Label> */}
                   <Input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     className={"w-full h-[36px]"}
                     placeholder="password"
                     // required
@@ -107,13 +123,32 @@ export default function SignUp() {
                 <div className="gap-4">
                   <Input
                     id="ConfirmPassword"
-                    type="ConfirmPassword"
+                    type={showPassword ? "text" : "password"}
                     className={"w-full h-[36px]"}
                     placeholder="ConfirmPassword"
                     // required
                     value={confirmPassword}
-                    onChange={handlePasswordInputChange}
+                    onChange={handleConfirmPasswordInputChange}
                   />
+                  {errorConfirmPassword && (
+                    <span className="text-red-500  text-xs">
+                      {errorConfirmPassword}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 mt-1">
+                  <input
+                    type="checkbox"
+                    id="showPassword"
+                    checked={showPassword}
+                    onChange={(e) => setShowPassword(e.target.checked)}
+                  />
+                  <Label
+                    htmlFor="showPassword"
+                    className="text-sm text-gray-500 cursor-pointer"
+                  >
+                    Show password
+                  </Label>
                 </div>
               </div>
               <CardFooter className="flex-col gap-2">
