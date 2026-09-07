@@ -23,7 +23,7 @@ const isValidPassword = (password) => {
   return passwordRegex.test(password);
 };
 
-export default function StepTwoPage() {
+export default function StepTwoPage({ onBack }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
@@ -87,9 +87,13 @@ export default function StepTwoPage() {
       <div className="flex flex-col ">
         <Card className="w-[416px]  relative flex flex-col mt-1 ">
           <CardHeader className={"flex flex-col "}>
-            <Link href="/" className="w-fit p-1 hover:bg-gray-100 rounded-md">
+            <button
+              type="button"
+              onClick={onBack}
+              className="w-fit p-1 hover:bg-gray-100 rounded-md"
+            >
               <ChevronLeft className="w-5 h-5" />
-            </Link>
+            </button>
             <CardTitle className={"font-semibold text-2xl text-gray-900"}>
               Create strong password
             </CardTitle>

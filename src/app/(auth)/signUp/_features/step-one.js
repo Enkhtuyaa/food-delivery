@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function StepOnePage () {
+export default function StepOnePage ({ onSuccess }) {
   const [createEmail, setCreateEmail] = useState("");
   const [errorCreateEmail, setErrorCreateEmail] = useState("");
 
@@ -51,6 +51,7 @@ export default function StepOnePage () {
     const error = validateEmail(createEmail);
     setErrorCreateEmail(error);
     if (error === "") {
+       onSuccess();
       console.log("create success");
     }
   };
