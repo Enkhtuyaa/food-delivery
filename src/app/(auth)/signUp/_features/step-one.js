@@ -15,31 +15,32 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+// import { z } from "zod";
+// import { useForm } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
 
-const StepOnePageSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email format"),
-});
+// const StepOnePageSchema = z.object({
+//   email: z.string().min(1, "Email is required").email("Invalid email format"),
+// });
 
-export default function StepOnePage({ onSuccess }) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm({
-    resolver: zodResolver(StepOnePageSchema),
-    defaultValues: { email: "" },
-  });
-  // const [createEmail, setCreateEmail] = useState("");
-  // const [errorCreateEmail, setErrorCreateEmail] = useState("");
+export default function StepOnePage({ onNext }) {
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors, isSubmitting },
+  // } = useForm({
+  //   resolver: zodResolver(StepOnePageSchema),
+  //   defaultValues: { email: "" },
+  // });
+  const [createEmail, setCreateEmail] = useState("");
+  const [errorCreateEmail, setErrorCreateEmail] = useState("");
 
-  // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  // const isValidEmail = (email) => {
-  //   return emailRegex.test(email);
-  // };
+  const isValidEmail = (email) => {
+    return emailRegex.test(email);
+  };
 
   const validateEmail = (email) => {
     if (!email) {
@@ -61,15 +62,15 @@ export default function StepOnePage({ onSuccess }) {
     }
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const error = validateEmail(createEmail);
-  //   setErrorCreateEmail(error);
-  //   if (error === "") {
-  //      onSuccess();
-  //     console.log("create success");
-  //   }
-  // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const error = validateEmail(createEmail);
+    setErrorCreateEmail(error);
+    if (error === "") {
+      onNext();
+      console.log("create success");
+    }
+  };
 
   return (
     <div className="w-screen min-h-screen flex  gap-12   justify-center items-center ">
@@ -111,7 +112,11 @@ export default function StepOnePage({ onSuccess }) {
                 </div>
               </div>
               <CardFooter className="flex-col gap-2">
-                <Button type="submit" className="w-full">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  style={{ cursor: "pointer" }}
+                >
                   Sign Up
                 </Button>
                 {/* <Button variant="outline" className="w-full">

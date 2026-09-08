@@ -23,7 +23,7 @@ const isValidPassword = (password) => {
   return passwordRegex.test(password);
 };
 
-export default function StepTwoPage({ onBack }) {
+export default function StepTwoPage({onBack}) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
@@ -91,6 +91,7 @@ export default function StepTwoPage({ onBack }) {
               type="button"
               onClick={onBack}
               className="w-fit p-1 hover:bg-gray-100 rounded-md"
+              style={{cursor : "pointer"}}
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -156,7 +157,11 @@ export default function StepTwoPage({ onBack }) {
                 </div>
               </div>
               <CardFooter className="flex-col gap-2">
-                <Button type="submit" className="w-full">
+                <Button
+                 type="submit"
+                  className="w-full"
+                  style = {{cursor : "pointer"}}
+                >
                   Sign Up
                 </Button>
                 {/* <Button variant="outline" className="w-full">
