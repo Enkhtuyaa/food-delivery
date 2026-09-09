@@ -38,16 +38,14 @@ export default function LoginPage() {
   });
 
 
-  const emailValidation = register("email")
-  // console.log(email, "email")
-  console.log(errors, "errors")
-  // console.log(isSubmitting, "isSubmitting")
+  // const emailValidation = register("email")
+  // // console.log(email, "email")
+  // console.log(errors, "errors")
+  // // console.log(isSubmitting, "isSubmitting")
 
   const emailStepSubmit = (data) => {
     console.log(data, "this is my data");
     console.log("hello");
-    
-    
   }
   // const [email, setEmail] = useState("");
   // const [emailError, setEmailError] = useState("");

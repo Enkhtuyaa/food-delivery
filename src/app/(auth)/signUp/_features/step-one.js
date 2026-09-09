@@ -15,62 +15,70 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-// import { z } from "zod";
-// import { useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-// const StepOnePageSchema = z.object({
-//   email: z.string().min(1, "Email is required").email("Invalid email format"),
-// });
+const StepOnePageSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email is required")
+    .email("Invalid email format"),
+});
 
 export default function StepOnePage({ onNext }) {
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors, isSubmitting },
-  // } = useForm({
-  //   resolver: zodResolver(StepOnePageSchema),
-  //   defaultValues: { email: "" },
-  // });
-  const [createEmail, setCreateEmail] = useState("");
-  const [errorCreateEmail, setErrorCreateEmail] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(StepOnePageSchema),
+    defaultValues: { email: "" },
+  });
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-  const isValidEmail = (email) => {
-    return emailRegex.test(email);
+  const emailStepSubmit = (data) => {
+    console.log(data, "this is my data");
+    onNext();
   };
+  // const [createEmail, setCreateEmail] = useState("");
+  // const [errorCreateEmail, setErrorCreateEmail] = useState("");
 
-  const validateEmail = (email) => {
-    if (!email) {
-      return "Email reqiured";
-    } else if (!isValidEmail(email)) {
-      return "Invaild Email";
-    } else {
-      return "";
-    }
-  };
+  // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  const handleCreateInputChange = (event) => {
-    const value = event.target.value;
-    setCreateEmail(value);
-    if (errorCreateEmail) {
-      if (isValidEmail(value)) {
-        setErrorCreateEmail("");
-      }
-    }
-  };
+  // const isValidEmail = (email) => {
+  //   return emailRegex.test(email);
+  // };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const error = validateEmail(createEmail);
-    setErrorCreateEmail(error);
-    if (error === "") {
-      onNext();
-      console.log("create success");
-    }
-  };
+  // const validateEmail = (email) => {
+  //   if (!email) {
+  //     return "Email reqiured";
+  //   } else if (!isValidEmail(email)) {
+  //     return "Invaild Email";
+  //   } else {
+  //     return "";
+  //   }
+  // };
+
+  // const handleCreateInputChange = (event) => {
+  //   const value = event.target.value;
+  //   setCreateEmail(value);
+  //   if (errorCreateEmail) {
+  //     if (isValidEmail(value)) {
+  //       setErrorCreateEmail("");
+  //     }
+  //   }
+  // };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const error = validateEmail(createEmail);
+  //   setErrorCreateEmail(error);
+  //   if (error === "") {
+  //     onNext();
+  //     console.log("create success");
+  //   }
+  // };
 
   return (
     <div className="w-screen min-h-screen flex  gap-12   justify-center items-center ">
@@ -91,22 +99,23 @@ export default function StepOnePage({ onNext }) {
             </CardAction>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(emailStepSubmit)}>
               <div className="flex flex-col  ">
                 <div className="gap-4">
                   {/* <Label htmlFor="email">Email</Label> */}
                   <Input
-                    id="email"
-                    type="email"
-                    className={"w-full h-[36px]"}
+                    // id="email"
+                    // type="email"
+                    // className={"w-full h-[36px]"}
                     placeholder="your email address"
+                    {...register("email")}
                     // required
-                    value={createEmail}
-                    onChange={handleCreateInputChange}
+                    // value={createEmail}
+                    // onChange={handleCreateInputChange}
                   />
-                  {errorCreateEmail && (
+                  {errors.email && (
                     <span className="text-red-500  text-xs">
-                      {errorCreateEmail}
+                      {errors.email.message}
                     </span>
                   )}
                 </div>

@@ -1,5 +1,4 @@
 "use client";
-import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,15 +14,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {z} from "zod"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+const StepTwoPageSchema = z.object({
+  password:  
+})
 
-const isValidPassword = (password) => {
-  return passwordRegex.test(password);
-};
+// const passwordRegex =
+//   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
 
-export default function StepTwoPage({onBack}) {
+// const isValidPassword = (password) => {
+//   return passwordRegex.test(password);
+// };
+
+export default function StepTwoPage({ onBack }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
@@ -71,6 +79,10 @@ export default function StepTwoPage({onBack}) {
     }
   };
 
+  const router = useRouter();
+  const navigateToLoginPage = () => {
+    router.push("/login");
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const pwdError = validatePassword(password);
@@ -79,6 +91,7 @@ export default function StepTwoPage({onBack}) {
     setErrorConfirmPassword(confirmError);
     if (pwdError === "" && confirmError === "") {
       console.log("create success");
+       navigateToLoginPage();
     }
   };
 
@@ -91,9 +104,9 @@ export default function StepTwoPage({onBack}) {
               type="button"
               onClick={onBack}
               className="w-fit p-1 hover:bg-gray-100 rounded-md"
-              style={{cursor : "pointer"}}
+              style={{ cursor: "pointer" }}
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ArrowLeft w-5 h-5 />
             </button>
             <CardTitle className={"font-semibold text-2xl text-gray-900"}>
               Create strong password
@@ -158,9 +171,9 @@ export default function StepTwoPage({onBack}) {
               </div>
               <CardFooter className="flex-col gap-2">
                 <Button
-                 type="submit"
+                  type="submit"
                   className="w-full"
-                  style = {{cursor : "pointer"}}
+                  style={{ cursor: "pointer" }}
                 >
                   Sign Up
                 </Button>
