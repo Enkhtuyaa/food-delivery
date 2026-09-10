@@ -60,11 +60,12 @@ export default function StepTwoPage({ onBack }) {
 
    const passwordStepSubmit = (data) => {
     console.log(data, "this is my data");
-    navigateToLoginPage();
+  
+    navigateToAdminPage();
   };
 
   const router = useRouter();
-  const navigateToLoginPage = () => {
+  const navigateToAdminPage = () => {
     router.push("/admin");
   };
   // const passwordStepSubmit = async (data) => {
@@ -149,7 +150,7 @@ export default function StepTwoPage({ onBack }) {
               className="w-fit p-1 hover:bg-gray-100 rounded-md"
               style={{ cursor: "pointer" }}
             >
-              <ArrowLeft w-5 h-5 />
+              <ArrowLeft className="w-5 h-5" />
             </button>
             <CardTitle className={"font-semibold text-2xl text-gray-900"}>
               Create strong password

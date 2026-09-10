@@ -39,7 +39,7 @@ export default function StepOnePage({ onNext}) {
 
   const emailStepSubmit = (data) => {
     console.log(data, "this is my data");
-    onNext();
+    onNext(data);
   };
   // const [createEmail, setCreateEmail] = useState("");
   // const [errorCreateEmail, setErrorCreateEmail] = useState("");
