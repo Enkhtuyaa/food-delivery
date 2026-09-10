@@ -27,7 +27,7 @@ const StepOnePageSchema = z.object({
     .email("Invalid email format"),
 });
 
-export default function StepOnePage({ onNext }) {
+export default function StepOnePage({ onNext}) {
   const {
     register,
     handleSubmit,
@@ -155,7 +155,6 @@ export default function StepOnePage({ onNext }) {
           height={904}
           className="rounded-3xl"
         />
-         
       </div>
     </div>
   );
