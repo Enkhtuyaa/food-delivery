@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 
 const signUpFormSchema = z
   .object({
-    email: z.email(),
+    email: z.email("Please enter a valid email address"),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters long")
@@ -30,11 +30,13 @@ const signUpFormSchema = z
 export default function SignUp() {
   const [step, setStep] = useState(1);
   const router = useRouter();
+  const [submitError, setSubmitError] = useState("");
 
   const {
     register,
     handleSubmit,
     getValues,
+    trigger,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(signUpFormSchema),
@@ -43,20 +45,24 @@ export default function SignUp() {
 
   const passwordStepSubmit = async (data) => {
     try {
-      console.log(data, "this is my data")
+      console.log(data, "this is my data");
       const response = await server.post("/auth/sign-up", {
         email: data.email,
-        password: data.password, 
+        password: data.password,
       });
       localStorage.setItem("user", JSON.stringify(response.data.user));
-      router.push("/admin");
+      router.push("/admin/food-menu");
     } catch (error) {
-      console.log(error, "");
+      const message =
+        error?.response?.data?.message ||
+        "Something went wrong while signing up. Please try again.";
+      setSubmitError(message);
     }
   };
 
-  const handleNextStep = () => {
-    setStep(2);
+  const handleNextStep = async () => {
+    const isEmailValid = await trigger(["email"]);
+    if (isEmailValid) setStep(2);
   };
 
   const handleBackStep = () => {
@@ -79,7 +85,11 @@ export default function SignUp() {
             onBack={handleBackStep}
             register={register}
             errors={errors}
+            isSubmitting={isSubmitting}
           />
+        )}
+        {submitError && (
+          <p className="text-red-500 text-sm mt-2">{submitError}</p>
         )}
       </form>
     </div>

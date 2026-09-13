@@ -16,7 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function StepTwoPage({ onBack, register, errors, }) {
+export default function StepTwoPage({ onBack, register, errors, isSubmitting  }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -87,8 +87,9 @@ export default function StepTwoPage({ onBack, register, errors, }) {
                 type="submit"
                 className="w-full"
                 style={{ cursor: "pointer" }}
+                 disabled={isSubmitting}
               >
-                Sign Up
+                {isSubmitting ? "Signing up..." : "Sign Up"}
               </Button>
 
               <div className="flex gap-2 justify-center ">

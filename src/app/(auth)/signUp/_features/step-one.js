@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -14,15 +13,15 @@ import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function StepOnePage({ onNext, register, errors, emailValue }) {
-  const handleNextStep = () => {
-    if (emailValue.length === 0) {
-      return;
-    }
-    if (!errors.email) {
-      onNext();
-    }
-  };
+export default function StepOnePage({ onNext, register, errors,  }) {
+  // const handleNextStep = () => {
+  //   if (emailValue.length === 0) {
+  //     return;
+  //   }
+  //   if (!errors.email) {
+  //     onNext();
+  //   }
+  // };
   return (
     <div className="w-screen min-h-screen flex  gap-12   justify-center items-center ">
       <div className="flex flex-col ">
@@ -37,9 +36,6 @@ export default function StepOnePage({ onNext, register, errors, emailValue }) {
             <CardDescription>
               Sign up to explore your favorite dishes.
             </CardDescription>
-            <CardAction>
-              {/* <Button variant="link">Sign Up</Button> */}
-            </CardAction>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col  ">
@@ -57,12 +53,12 @@ export default function StepOnePage({ onNext, register, errors, emailValue }) {
             </div>
             <CardFooter className="flex-col gap-2">
               <Button
-                type="submit"
+                type="button"
                 className="w-full"
                 style={{ cursor: "pointer" }}
-                onClick={handleNextStep}
+                onClick={onNext}
               >
-                Sign Up
+                SignUp
               </Button>
               <div className="flex gap-2 justify-center ">
                 <span className="font-normal text-base text-gray-400">
