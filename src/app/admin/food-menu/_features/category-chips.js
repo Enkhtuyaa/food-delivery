@@ -1,10 +1,15 @@
-"use client"
-import { useState } from "react"
-export default function CategoryChips () {
-    const [category,setCategory] = useState([])
-    return (
-        <div>
+"use client";
+import { useState, useEffect } from "react";
 
-        </div>
-    )
+
+export default function CategoryChips() {
+ 
+
+  return (
+    <div>
+      <div>
+       
+      </div>
+    </div>
+  );
 }

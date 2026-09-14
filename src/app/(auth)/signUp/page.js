@@ -51,7 +51,7 @@ export default function SignUp() {
         password: data.password,
       });
       localStorage.setItem("user", JSON.stringify(response.data.user));
-      router.push(`admin/food-menun`);
+      router.push(`admin/food-menu`);
     } catch (error) {
       const message =
         error?.response?.data?.message ||
