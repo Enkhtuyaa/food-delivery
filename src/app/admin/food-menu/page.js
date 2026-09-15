@@ -21,8 +21,8 @@ export default function FoodMenuPage() {
   const [category, setCategory] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [categoryName, setCategoryName] = useState("");
-  const [nameError, setNameError] = useState("");
+  const [addCategoryName, setAddCategoryName] = useState("");
+  const [addCategoryNameError, setAddCategoryNameError] = useState("");
 
   const getFoodcategory = async () => {
     try {
@@ -54,16 +54,45 @@ export default function FoodMenuPage() {
   }, []);
 
   const handleInputChange = (e) => {
-    setCategoryName(e.target.value);
+    setAddCategoryName(e.target.value);
   };
-  const handleAddCategoryClick = () => {
-    if (categoryName.trim() === "") {
-      setNameError("please enter category");
-      return;
+  // const handleAddCategory = () => {
+  //   e.preventDefault ()
+  //   if (categoryName.trim() === "") {
+  //     setNameError("please enter category");
+  //     return;
+  //   }
+  //   try{
+  //     const response = await server.create("/food-category/create")
+  //     return response.data.foodCategories
+  //   }
+  //   // console.log(categoryName, "categoryName");
+  // };
+  const handleAddCategory = async (e) => {
+    e.preventDefault()
+    if (!addCategoryName.trim()) {
+      setAddCategoryNameError("Ангиллын нэрийг оруулна уу");
+      return; // энд try/catch хэрэггүй, учир нь async дуудлага байхгүй
     }
-    console.log(categoryName, "categoryName");
+    try {
+      const response = await server.post("/food-category/create", {
+        addCategoryName,
+      });
+      setAddCategoryName("");
+      setAddCategoryNameError("");
+      // амжилттай бол шинэчилсэн жагсаалтыг дахин татах
+      const data = await getFoodcategory();
+      setCategory(data ?? []);
+    } catch (error) {
+      // 1) Хөгжүүлэгчид зориулж дэлгэрэнгүй лог
+      console.error("Add category error:", error);
+      // 2) Хэрэглэгчид ойлгомжтой мессеж
+      setAddCategoryNameError(
+        error?.response?.data?.message || "Ангилал нэмэхэд алдаа гарлаа",
+      );
+    }
   };
-
+  
   if (loading) return <p className="font-bold">Loading...</p>;
   return (
     <div className="w-full h-full bg-gray-200 p-6">
@@ -89,7 +118,6 @@ export default function FoodMenuPage() {
                   <button
                     className="w-[36px] h-[36px] bg-red-500 rounded-full text-white flex items-center justify-center"
                     style={{ cursor: "pointer" }}
-                    onClick={handleAddCategoryClick}
                   >
                     <Plus className="w-[16px] h-[16px]" />
                   </button>
@@ -112,7 +140,7 @@ export default function FoodMenuPage() {
                       id="name-1"
                       name="name"
                       defaultValue="Pedro Duarte"
-                      value={categoryName}
+                      value={addCategoryName}
                       onChange={handleInputChange}
                     />
                   </Field>
@@ -124,7 +152,7 @@ export default function FoodMenuPage() {
                   <Button
                     type="submit"
                     onClick={() => {
-                      handleAddCategoryClick();
+                      handleAddCategory();
                     }}
                   >
                     Add category
