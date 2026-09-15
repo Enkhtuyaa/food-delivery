@@ -2,12 +2,12 @@
 import { useState, useEffect } from "react";
 import { server } from "../../_api/api";
 import { Plus } from "lucide-react";
+import { Trash } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -34,14 +34,6 @@ export default function FoodMenuPage() {
     }
   };
 
-  const deleteFoodCategory = async (id) => {
-    try {
-      const response = await server.delete("food-category/id");
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   useEffect(() => {
     getFoodcategory()
       .then((data) => setCategory(data))
@@ -56,43 +48,44 @@ export default function FoodMenuPage() {
   const handleInputChange = (e) => {
     setAddCategoryName(e.target.value);
   };
-  // const handleAddCategory = () => {
-  //   e.preventDefault ()
-  //   if (categoryName.trim() === "") {
-  //     setNameError("please enter category");
-  //     return;
-  //   }
-  //   try{
-  //     const response = await server.create("/food-category/create")
-  //     return response.data.foodCategories
-  //   }
-  //   // console.log(categoryName, "categoryName");
-  // };
-  const handleAddCategory = async (e) => {
-    e.preventDefault()
+
+  const handleAddCategory = async () => {
     if (!addCategoryName.trim()) {
-      setAddCategoryNameError("Ангиллын нэрийг оруулна уу");
-      return; // энд try/catch хэрэггүй, учир нь async дуудлага байхгүй
+      setAddCategoryNameError("Please enter the category name");
+      return;
     }
     try {
       const response = await server.post("/food-category/create", {
-        addCategoryName,
+        categoryName: addCategoryName,
       });
       setAddCategoryName("");
       setAddCategoryNameError("");
-      // амжилттай бол шинэчилсэн жагсаалтыг дахин татах
       const data = await getFoodcategory();
       setCategory(data ?? []);
     } catch (error) {
-      // 1) Хөгжүүлэгчид зориулж дэлгэрэнгүй лог
       console.error("Add category error:", error);
-      // 2) Хэрэглэгчид ойлгомжтой мессеж
       setAddCategoryNameError(
-        error?.response?.data?.message || "Ангилал нэмэхэд алдаа гарлаа",
+        error?.response?.data?.message || "Failed to add category",
       );
     }
   };
-  
+
+  const deleteFoodCategory = async (id) => {
+    try {
+      const response = await server.delete("food-category/delete", {
+        data: { id },
+      });
+      if (response.status === 200) {
+        setCategory((prevCategory) =>
+          prevCategory.filter((item) => item._id !== id),
+        );
+      }
+    } catch (error) {
+      const message = error.response?.data?.message || "Устгахад алдаа гарлаа";
+      console.error("Delete category error:", message);
+    }
+  };
+
   if (loading) return <p className="font-bold">Loading...</p>;
   return (
     <div className="w-full h-full bg-gray-200 p-6">
@@ -100,15 +93,24 @@ export default function FoodMenuPage() {
         <h1 className="font-bold text-black text-base flex gap-4">
           Dishes category
         </h1>
+        {errorMessage && (
+          <p className="text-red-500 font-medium">{errorMessage}</p>
+        )}
         <div className="flex flex-wrap  gap-3 ">
-          {category?.map((item) => (
-            <button
+        {category?.map((item) => (
+            <div
               key={item._id}
-              className="w-[165px] h-[40px] rounded-full bg-amber-200"
-              style={{ cursor: "pointer" }}
+              className="flex items-center justify-between gap-2 px-4 h-[40px] rounded-full bg-amber-200"
             >
-              {item.categoryName}
-            </button>
+              <span>{item.categoryName}</span>
+              <button
+                type="button"
+                onClick={() => deleteFoodCategory(item._id)}
+                className="text-white cursor-pointer bg-black w-[30px] h-[30px] rounded-full  flex justify-center items-center"
+              >
+                <Trash className="w-4 h-4" />
+              </button>
+            </div>
           ))}
 
           <Dialog>
@@ -128,10 +130,6 @@ export default function FoodMenuPage() {
                   <DialogTitle className={"font-bold"}>
                     Add new category
                   </DialogTitle>
-                  {/* <DialogDescription>
-                      Make changes to your profile here. Click save when
-                      you&apos;re done.
-                    </DialogDescription> */}
                 </DialogHeader>
                 <FieldGroup>
                   <Field>
@@ -143,6 +141,11 @@ export default function FoodMenuPage() {
                       value={addCategoryName}
                       onChange={handleInputChange}
                     />
+                    {addCategoryNameError && (
+                      <span className="font-medium text-red-500">
+                        {addCategoryNameError}
+                      </span>
+                    )}
                   </Field>
                 </FieldGroup>
                 <DialogFooter>
@@ -150,7 +153,7 @@ export default function FoodMenuPage() {
                     render={<Button variant="outline">Cancel</Button>}
                   />
                   <Button
-                    type="submit"
+                    type="button"
                     onClick={() => {
                       handleAddCategory();
                     }}
