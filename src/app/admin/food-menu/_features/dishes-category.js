@@ -2,8 +2,9 @@
 import { useState, useEffect } from "react";
 import { server } from "../../../_api/api";
 import { Plus } from "lucide-react";
-import { Trash } from 'lucide-react';
+import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogClose,
@@ -17,35 +18,10 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function DishesCategory() {
-  const [categories , setCategories] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(true);
+export default function DishesCategory({ categories, getFoodCategory, error }) {
   const [addCategoryName, setAddCategoryName] = useState("");
   const [addCategoryNameError, setAddCategoryNameError] = useState("");
 
-  const getFoodcategory = async () => {
-    try {
-      const response = await server.get("/food-category/get");
-      console.log("API Response Data:", response.data);
-      return response.data.foodCategories;
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    getFoodcategory()
-      .then((data) => setCategories(data))
-      .catch((error) => {
-        setErrorMessage("FOOD API ERROR");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
- 
-  
   const handleInputChange = (e) => {
     setAddCategoryName(e.target.value);
   };
@@ -61,8 +37,9 @@ export default function DishesCategory() {
       });
       setAddCategoryName("");
       setAddCategoryNameError("");
-      const data = await getFoodcategory();
-      setCategories(data ?? []);
+      console.log("Refetching categories...");
+      await getFoodCategory();
+      console.log("Refetch done");
     } catch (error) {
       console.error("Add category error:", error);
       setAddCategoryNameError(
@@ -73,13 +50,14 @@ export default function DishesCategory() {
 
   const deleteFoodCategory = async (id) => {
     try {
-      const response = await server.delete("food-category/delete", {
-        data: { id },
+      const response = await server.delete("/food-category/delete", {
+        data: { id: id },
       });
       if (response.status === 200) {
-        setCategories((prevCategory) =>
-          prevCategory.filter((item) => item._id !== id),
-        );
+        await getFoodCategory();
+        // getFoodCategory((prevCategory) =>
+        //   prevCategory.filter((item) => item._id !== id),
+        // );
       }
     } catch (error) {
       const message = error.response?.data?.message || "Устгахад алдаа гарлаа";
@@ -87,18 +65,15 @@ export default function DishesCategory() {
     }
   };
 
-  if (loading) return <p className="font-bold">Loading...</p>;
   return (
-    <div className="w-full h-full bg-gray-200 p-6">
+    <div className=" p-6">
       <div className="w-[1171px]  rounded-xl bg-white flex gap-4 p-6 flex-col">
         <h1 className="font-bold text-black text-base flex gap-4">
           Dishes category
         </h1>
-        {errorMessage && (
-          <p className="text-red-500 font-medium">{errorMessage}</p>
-        )}
+        {error && <p className="text-red-500 font-medium">{error}</p>}
         <div className="flex flex-wrap  gap-3 ">
-        {categories?.map((item) => (
+          {categories?.map((item) => (
             <div
               key={item._id}
               className="flex items-center justify-between gap-2 px-4 h-[40px] rounded-full border"
@@ -108,9 +83,8 @@ export default function DishesCategory() {
                 type="button"
                 onClick={() => deleteFoodCategory(item._id)}
                 className="text-white cursor-pointer bg-black w-[25px] h-[25px] rounded-full  flex justify-center items-center"
-              > 
+              >
                 <Trash className="w-3 h-3" />
-                <div></div>
               </button>
             </div>
           ))}
@@ -157,6 +131,7 @@ export default function DishesCategory() {
                     onClick={() => {
                       handleAddCategory();
                     }}
+                    style={{ cursor: "pointer" }}
                   >
                     Add category
                   </Button>
