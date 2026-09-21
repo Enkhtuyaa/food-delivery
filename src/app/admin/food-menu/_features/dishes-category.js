@@ -60,7 +60,7 @@ export default function DishesCategory({ categories, getFoodCategory, error }) {
         // );
       }
     } catch (error) {
-      const message = error.response?.data?.message || "Устгахад алдаа гарлаа";
+      const message = error.response?.data?.message || "Failed to delete";
       console.error("Delete category error:", message);
     }
   };
