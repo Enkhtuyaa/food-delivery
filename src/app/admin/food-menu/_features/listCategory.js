@@ -5,11 +5,20 @@ import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BookImage } from "lucide-react";
-export default function ListCategories({ categories }) {
+import axios from "axios";
+import { server } from "../../../_api/api";
+const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+const upload_preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+export default function ListCategories({ categories, getFoodCategory }) {
   const [isOpen, setIsOpen] = useState(null);
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const handleAddDishesClick = (dishes) => {
+  const [addDishesName, setAddDishesName] = useState("");
+  const [price, setPrice] = useState("");
+  const [ingredients, setIngredients] = useState("");
+
+  const handleAddDishesClick = async (dishes) => {
     setIsOpen(dishes);
   };
 
@@ -18,22 +27,57 @@ export default function ListCategories({ categories }) {
   };
 
   const handleChange = (e) => {
-    const selected = e.target.files?.[0];
-    if (selected) setFile(selected);
-    setPreviewUrl(URL.createObjectURL(selected));
+    const image = e.target.files?.[0];
+    console.log(image);
+    setFile(image);
+    setPreviewUrl(URL.createObjectURL(image));
+    // if (selected) setFile(selected);
+    // setPreviewUrl(URL.createObjectURL(selected));
   };
 
-  const handleFile = (selected) => {
-    if (!selected) return;
-    setFile(selected);
-    setPreviewUrl(URL.createObjectURL(selected));
+  const handleDishesClick = async () => {
+    try {
+      const response = await server.post("/dishes-category/create", {
+        foodName: addDishesName,
+        price: Number(price),
+        ingredients,
+        image: imageUrl, // Cloudinary-ээс авсан secure_url
+        category: isOpen._id, // аль category-д нэмж байгаа
+      });
+      setAddDishesName("");
+
+      console.log();
+    } catch (error) {
+      console.error("dishes error", error.response?.data || error.message);
+    }
   };
+
+  const upload = async () => {
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("upload_preset", upload_preset);
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        body,
+      );
+      console.log(response.data.secure_url); // байршуулсан зургийн линк
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+    }
+  };
+  // const handleFile = (selected) => {
+  //   if (!selected) return;
+  //   setFile(selected);
+  //   setPreviewUrl(URL.createObjectURL(selected));
+  // };
 
   useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
+
   return (
     <div className="p-6 flex flex-col gap-5 ">
       {categories.map((item) => (
@@ -71,16 +115,26 @@ export default function ListCategories({ categories }) {
                 <div className="flex justify-between p-6">
                   <div className="flex gap-2 flex-col">
                     <p className="font-medium text-sm">Food name</p>
-                    <Input placeholder="Type food name" />
+                    <Input
+                      value={addDishesName}
+                      onChange={(e) => setAddDishesName(e.target.value)}
+                      placeholder="Type food name"
+                    />
                   </div>
                   <div className="flex gap-2 flex-col">
                     <p className="font-medium text-sm">Food price</p>
-                    <Input placeholder="Enter price..." />
+                    <Input
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      placeholder="Enter price..."
+                    />
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 p-6">
                   <p className="font-medium text-sm">Ingredients</p>
                   <Input
+                    value={ingredients}
+                    onChange={(e) => setIngredients(e.target.value)}
                     className={"w-[412px] h-[90px] "}
                     placeholder="List ingredients..."
                   />
@@ -120,10 +174,30 @@ export default function ListCategories({ categories }) {
                     className="peer sr-only"
                   />
                   {file && <p>{file.name}</p>}
+                  <div className="flex justify-between">
+                    <button
+                      className="w-[93px] h-[40px] rounded-lg bg-black text-white cursor-pointer "
+                      onClick={upload}
+                    >
+                      Upload
+                    </button>
+                    <button
+                      onClick={handleDishesClick}
+                      className="w-[93px] h-[40px] rounded-lg bg-black text-white cursor-pointer"
+                    >
+                      Add Dish
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           )}
+          {/* {categories.map.dishes((item) => (
+            <div
+              key={item._id}
+              className="flex w-[270px] h-[240px] bg-white rounded-lg"
+            ></div>
+          ))} */}
         </div>
       ))}
     </div>
