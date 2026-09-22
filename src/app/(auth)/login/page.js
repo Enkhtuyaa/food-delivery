@@ -1,19 +1,12 @@
 "use client";
-import { ChevronLeft, Eye, EyeOff } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useState } from "react";
 import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-// const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-
-// const checkEachCharacter = (email) => EMAIL_REGEX.test(email);
-// const checkEachCharacterPassword = (password) => PASSWORD_REGEX.test(password);
 
 const LoginPageSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
@@ -37,70 +30,11 @@ export default function LoginPage() {
     defaultValues: { email: "", password: "" },
   });
 
-
-  // const emailValidation = register("email")
-  // // console.log(email, "email")
-  // console.log(errors, "errors")
-  // // console.log(isSubmitting, "isSubmitting")
-
   const emailStepSubmit = (data) => {
     console.log(data, "this is my data");
-    console.log("hello");
+    // console.log("hello");
   }
-  // const [email, setEmail] = useState("");
-  // const [emailError, setEmailError] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [passwordError, setPasswordError] = useState("");
-  // const [showPassword, setShowpassword] = useState(false);
-
-  // const validateEmail = (email) => {
-  //   if (email.length === 0) {
-  //     return "Email required";
-  //   } else if (!checkEachCharacter(email)) {
-  //     return "Invalid email address";
-  //   } else {
-  //     return "";
-  //   }
-  // };
-
-  // const validatePassword = (password) => {
-  //   if (password.length === 0) {
-  //     return "Password required";
-  //   } else if (!checkEachCharacterPassword(password)) {
-  //     return "Invalid password";
-  //   } else {
-  //     return "";
-  //   }
-  // };
-  // const handleEmailInputChange = (event) => {
-  //   const value = event.target.value;
-  //   setEmail(value);
-  //   // console.log(event.target.value)
-  //   if (emailError) {
-  //     setEmailError(validateEmail(value));
-  //   }
-  // };
-
-  // const handlePasswordInputChange = (event) => {
-  //   const value = event.target.value;
-  //   setPassword(value);
-  //   if (passwordError) {
-  //     if (checkEachCharacterPassword(value)) {
-  //       setPasswordError("");
-  //     }
-  //   }
-  // };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const error = validateEmail(email);
-  //   const passwordErr = validatePassword(password);
-  //   setEmailError(error);
-  //   setPasswordError(passwordErr);
-  //   if (error === "" && passwordErr === "") {
-  //     console.log("login success");
-  //   }
-
+// sign-up page baidlaar localStorage hiih estoi esehiig asuuh
   return (
     <div className="w-screen min-h-screen  flex items-center justify-center p-6 bg-gray-50  ">
       <div className="flex gap-12 items-center max-w-[1280px]">

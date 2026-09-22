@@ -45,13 +45,15 @@ export default function SignUp() {
 
   const passwordStepSubmit = async (data) => {
     try {
-      console.log(data, "this is my data");
+      // console.log(data, "this is my data");
       const response = await server.post("/auth/sign-up", {
         email: data.email,
         password: data.password,
       });
       localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("token", response.data.token)
       router.push(`admin/food-menu`);
+      // console.log(response)
     } catch (error) {
       const message =
         error?.response?.data?.message ||
