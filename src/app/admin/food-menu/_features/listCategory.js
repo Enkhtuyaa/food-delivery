@@ -1,3 +1,4 @@
+"use client"
 import { Plus, Pencil, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
@@ -12,16 +13,16 @@ const upload_preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
 export default function ListCategories({ categories }) {
   const [isOpen, setIsOpen] = useState(null);
-  const [file, setFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [addDishesName, setAddDishesName] = useState("");
+  const [file, setFile] = useState(null); //oruulj bui zurag hadgalah//
+  const [previewUrl, setPreviewUrl] = useState(null); //zurgaa harah state//
+  const [addDishesName, setAddDishesName] = useState(""); //nemj bgaa hoolnii ner//
   const [price, setPrice] = useState("");
   const [ingredients, setIngredients] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [dishes, setDishes] = useState([]);
+  const [imageUrl, setImageUrl] = useState(""); //cloudinary luu amjilttai bolood butsaj irsen URL, backEnd rvv ilgeene//
+  const [dishes, setDishes] = useState([]);  //server-ees tatsan datagaa hadgalah state// 
 
-  const handleAddDishesClick = async (dishes) => {
-    setIsOpen(dishes);
+  const handleAddDishesClick = async (dish) => {
+    setIsOpen(dish);
   };
   const resetForm = () => {
     setAddDishesName("");
@@ -35,14 +36,7 @@ export default function ListCategories({ categories }) {
     setIsOpen(null);
     resetForm();
   };
-
-  // const handleChange = (e) => {
-  //   const image = e.target.files?.[0];
-  //   console.log(image);
-  //   setFile(image);
-  //   setPreviewUrl(URL.createObjectURL(image));
-  // };
-
+  
   const selectFile = (selected) => {
     if (!selected) return;
     setFile(selected);

@@ -52,7 +52,7 @@ export default function SignUp() {
       });
       localStorage.setItem("user", JSON.stringify(response.data.user));
       localStorage.setItem("token", response.data.token)
-      router.push(`admin/food-menu`);
+      router.push("admin");
       // console.log(response)
     } catch (error) {
       const message =
