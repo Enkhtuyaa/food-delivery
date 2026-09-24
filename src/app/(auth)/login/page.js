@@ -7,7 +7,8 @@ import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { server } from "../../_api/api";
+import { useRouter } from "next/navigation";
 const LoginPageSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
   password: z
@@ -21,6 +22,7 @@ const LoginPageSchema = z.object({
 });
 
 export default function LoginPage() {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -30,11 +32,20 @@ export default function LoginPage() {
     defaultValues: { email: "", password: "" },
   });
 
-  const emailStepSubmit = (data) => {
-    console.log(data, "this is my data");
-    // console.log("hello");
-  }
-// sign-up page baidlaar localStorage hiih estoi esehiig asuuh
+  const emailStepSubmit = async (data) => {
+    // console.log(data, "this is my data");
+    try {
+      const response = await server.post("auth/login", {
+        email: data.email,
+        password: data.password,
+      });
+      router.push("admin")
+       console.log(response, "this is response")
+    } catch (error) {
+      const message = error?.response?.data?.message;
+    }
+  };
+  // sign-up page baidlaar localStorage hiih estoi esehiig asuuh
   return (
     <div className="w-screen min-h-screen  flex items-center justify-center p-6 bg-gray-50  ">
       <div className="flex gap-12 items-center max-w-[1280px]">
@@ -55,9 +66,9 @@ export default function LoginPage() {
           >
             <div className="flex flex-col gap-1">
               <Input
-              // name={emailValidation.name}
-              // onChange = {emailValidation.onChange}
-              {...register("email")}
+                // name={emailValidation.name}
+                // onChange = {emailValidation.onChange}
+                {...register("email")}
                 // id="email"
                 // type="text"
                 // className={"w-full h-[40px]"}
@@ -66,7 +77,9 @@ export default function LoginPage() {
                 // onChange={handleEmailInputChange}
               />
               {errors.email && (
-                <span className="text-red-500  text-xs">{errors.email.message}</span>
+                <span className="text-red-500  text-xs">
+                  {errors.email.message}
+                </span>
               )}
             </div>
             <div className="flex flex-col gap-1">
@@ -88,8 +101,10 @@ export default function LoginPage() {
                   {/* {showPassword ? <EyeOff size={18} /> : <Eye size={18} />} */}
                 </button>
               </div>
-              {errors.password&& (
-                <span className="text-red-500 text-xs">{errors.password.message}</span>
+              {errors.password && (
+                <span className="text-red-500 text-xs">
+                  {errors.password.message}
+                </span>
               )}
             </div>
 

@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import StepOnePage from "./_features/step-one";
 import StepTwoPage from "./_features/step-two";
@@ -52,7 +51,7 @@ export default function SignUp() {
       });
       localStorage.setItem("user", JSON.stringify(response.data.user));
       localStorage.setItem("token", response.data.token)
-      router.push("admin");
+      router.push("/admin");
       // console.log(response)
     } catch (error) {
       const message =

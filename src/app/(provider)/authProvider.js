@@ -9,8 +9,8 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("user");
-      if (stored) setUser(JSON.parse(stored));
+      const stored = localStorage.getItem("user"); // eslint -disable-next-line react-hooks/set-state-in-effect
+      if (stored) setUser(JSON.parse(stored)); // eslint -disable-next-line react-hooks/set-state-in-effect
     } catch (error) {
       localStorage.removeItem("user");
     } finally {
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
-  );
+  )
 };
 
 export const useAuth = () => {
@@ -30,3 +30,4 @@ export const useAuth = () => {
   }
   return context;
 };
+
