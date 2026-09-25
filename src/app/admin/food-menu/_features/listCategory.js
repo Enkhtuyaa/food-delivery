@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label";
 import { BookImage } from "lucide-react";
 import axios from "axios";
 import { server } from "../../../_api/api";
-import { id } from "zod/locales";
+import { useList } from "@/app/(provider)/listProvider";
+
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const upload_preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
@@ -19,11 +20,13 @@ export default function ListCategories({ categories }) {
   const [price, setPrice] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [imageUrl, setImageUrl] = useState(""); //cloudinary luu amjilttai bolood butsaj irsen URL, backEnd rvv ilgeene//
-  const [dishes, setDishes] = useState([]);  //server-ees tatsan datagaa hadgalah state// 
+  // const [dishes, setDishes] = useState([]);  //server-ees tatsan datagaa hadgalah state// 
 
+  const { dishes, getDishes } = useList()
   const handleAddDishesClick = async (dish) => {
     setIsOpen(dish);
   };
+
   const resetForm = () => {
     setAddDishesName("");
     setPrice("");
@@ -48,15 +51,15 @@ export default function ListCategories({ categories }) {
     selectFile(e.target.files?.[0]);
   };
 
-  const getDishes = async () => {
-    try {
-      const response = await server.get("/dishes-category/get");
-      console.log(response.data);
-      setDishes(response.data.dishesCategories || []);
-    } catch (error) {
-      console.log("get dishes error", error.response?.data || error.message);
-    }
-  };
+  // const getDishes = async () => {
+  //   try {
+  //     const response = await server.get("/dishes-category/get");
+  //     console.log(response.data);
+  //     setDishes(response.data.dishesCategories || []);
+  //   } catch (error) {
+  //     console.log("get dishes error", error.response?.data || error.message);
+  //   }
+  // };
 
   const handleDishesClick = async () => {
     try {
@@ -96,9 +99,9 @@ export default function ListCategories({ categories }) {
     }
   };
 
-  useEffect(() => {
-    getDishes();
-  }, []);
+  // useEffect(() => {
+  //   getDishes();
+  // }, []);
 
   useEffect(() => {
     return () => {

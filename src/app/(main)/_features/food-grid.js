@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { server } from "../../_api/api";
 import { Plus } from "lucide-react";
+
 export default function FoodGrid() {
   const [categories, setCategories] = useState([]);
   const [foods, setFoods] = useState([]);
