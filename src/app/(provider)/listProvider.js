@@ -12,7 +12,7 @@ export const ListProvider = ({ children }) => {
   const getDishes = async () => {
     try {
       const response = await server.get("/dishes-category/get");
-      console.log(response.data);
+      // console.log(response.data);
       setDishes(response.data.dishesCategories || []);
     } catch (error) {
       console.log("get dishes error", error.response?.data || error.message);
