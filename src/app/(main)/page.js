@@ -1,5 +1,5 @@
 import Hero from "./_components/hero"
-import FoodGrid from "./_features/food-grid"
+import FoodGrid from "./_components/food-grid"
 import Footer from "./_components/footer"
 export default function Home() {
     return (
