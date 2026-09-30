@@ -11,6 +11,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useCart } from "@/app/(main)/_components/cart-context";
+
 export default function Header() {
   const { cart, totalCount, removeFromCart } = useCart();
   const [isCartOpen, setIsCartOpen] = useState(false);
