@@ -43,23 +43,29 @@ export default function Footer() {
             <p className="font-normal text-white">Beverages</p>
             <p className="font-normal text-white">Fish & Sea foods</p>
           </div>
-          <div>
-            <p className="font-normal text-gray-400">FOLLOW US</p>
-          </div>
-          <div className="flex">
-            <Image
-              src="/Instagram.png"
-              alt="Instagram"
-              width={28}
-              height={28}
-            />
+          <div className="flex flex-col">
+            <div>
+              <p className="font-normal text-gray-400">FOLLOW US</p>
+            </div>
+            <div className="flex">
+              <span>
+                <Image
+                  src="/Instagram.png"
+                  alt="Instagram"
+                  width={28}
+                  height={28}
+                />
+              </span>
 
-            <Image
-              src="/Social icon.png"
-              alt="Social icon"
-              width={28}
-              height={28}
-            />
+              <span>
+                <Image
+                  src="/Social icon.png"
+                  alt="Social icon"
+                  width={28}
+                  height={28}
+                />
+              </span>
+            </div>
           </div>
         </div>
       </div>
